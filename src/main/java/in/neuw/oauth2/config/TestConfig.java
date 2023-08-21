@@ -1,13 +1,10 @@
 package in.neuw.oauth2.config;
 
-import in.neuw.oauth2.cache.models.CustomOAuth2AccessToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -46,9 +43,7 @@ public class TestConfig {
     @Bean
     public WebClient webClientTest(final @Value("${oauth2.registration.id}") String oauth2RegistrationId,
                                    final @Value("${resource.base}") String resourceBase,
-                                   final ClientRegistrationRepository clientRegistrationRepository,
-                                   final RedisTemplate<String, CustomOAuth2AccessToken> redisDataTemplate,
-                                   final StringRedisTemplate stringRedisTemplate) {
+                                   final ClientRegistrationRepository clientRegistrationRepository) {
         var tokenEndpointLogger = LoggerFactory.getLogger(oauth2RegistrationId+OAUTH2_TOKEN_ENDPOINT);
         var resourceEndpointLogger = LoggerFactory.getLogger(oauth2RegistrationId+RESOURCE_ENDPOINT);
 
@@ -77,7 +72,7 @@ public class TestConfig {
                 .build();
     }
 
-    private static RestTemplate getRestTemplateForTokenEndPoint(String oauth2RegistrationId, Logger tokenEndpointLogger) {
+    private RestTemplate getRestTemplateForTokenEndPoint(String oauth2RegistrationId, Logger tokenEndpointLogger) {
         var restTemplateForTokenEndPoint = new RestTemplate();
         restTemplateForTokenEndPoint
                 .setMessageConverters(
